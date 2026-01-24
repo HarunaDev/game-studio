@@ -1,5 +1,6 @@
-import * as Phaser from 'phaser'
+import * as Phaser from 'phaser';
 import { Position } from '../../common/types';
+import { PLAYER_ANIMATION_KEYS } from '../../common/assets';
 
 export type PlayerConfig = {
   scene: Phaser.Scene;
@@ -16,5 +17,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
     scene.add.existing(this);
     scene.physics.add.existing(this);
+
+    this.play({ key: PLAYER_ANIMATION_KEYS.IDLE_DOWN, repeat: -1 });
   }
 }
