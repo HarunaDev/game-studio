@@ -1,3 +1,4 @@
+import * as Phaser from 'phaser';
 import { InputComponent } from './Input-component';
 
 export class KeyboardComponent extends InputComponent {
