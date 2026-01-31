@@ -24,6 +24,17 @@ export class StateMachine {
     this.#states = new Map();
   }
 
+  public update(): void {
+    const queuedState = this.#changingStateQueue.shift();
+    if (queuedState !== undefined) {
+      this.setState(queuedState.state, queuedState.args);
+      return;
+    }
+    if (this.#currentState && this.#currentState.onUpdate) {
+      this.#currentState.onUpdate();
+    }
+  }
+
   public setState(name: string, ...args: unknown[]): void {
     const methodName = 'setState';
     if (!this.#states.has(name)) {
