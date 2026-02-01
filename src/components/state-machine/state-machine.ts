@@ -1,3 +1,5 @@
+import { ENABLE_LOGGING } from '../../common/config';
+
 export interface State {
   stateMachine: StateMachine;
   name: string;
@@ -76,6 +78,9 @@ export class StateMachine {
   }
 
   #log(methodName: string, message: string) {
+    if (!ENABLE_LOGGING) {
+      return;
+    }
     console.log(`[${StateMachine.name}-${this.#id}:${methodName}] ${message}`);
   }
 }
