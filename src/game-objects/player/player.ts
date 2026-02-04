@@ -8,6 +8,8 @@ import { StateMachine } from '../../components/state-machine/state-machine';
 import { IdleState } from '../../components/state-machine/states/character/idle-state';
 import { CHARACTER_STATES } from '../../components/state-machine/states/character/character-states';
 import { MoveState } from '../../components/state-machine/states/character/move-state';
+import { SpeedComponent } from '../../components/game-object/speed-component';
+import { PLAYER_SPEED } from '../../common/config';
 
 export type PlayerConfig = {
   scene: Phaser.Scene;
@@ -19,6 +21,7 @@ export type PlayerConfig = {
 
 export class Player extends Phaser.Physics.Arcade.Sprite {
   #controlsComponent: ControlComponent;
+  #speedComponent: SpeedComponent;
   #stateMachine: StateMachine;
 
   constructor(config: PlayerConfig) {
@@ -30,6 +33,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     scene.physics.add.existing(this);
 
     this.#controlsComponent = new ControlComponent(this, config.controls);
+    this.#speedComponent = new SpeedComponent(this, PLAYER_SPEED);
 
     // this.play({ key: PLAYER_ANIMATION_KEYS.IDLE_DOWN, repeat: -1 });
 
@@ -46,6 +50,10 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
   get controls(): InputComponent {
     return this.#controlsComponent.controls;
+  }
+
+  get speed(): number {
+    return this.#speedComponent.speed;
   }
 
   update(): void {
