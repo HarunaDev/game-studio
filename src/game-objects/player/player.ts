@@ -41,6 +41,11 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       config.scene.events.off(Phaser.Scenes.Events.UPDATE, this.update, this);
     });
   }
+
+  get controls(): InputComponent {
+    return this.#controlsComponent.controls;
+  }
+
   update(): void {
     const controls = this.#controlsComponent.controls;
     if (controls.isUpDown) {
