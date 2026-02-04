@@ -7,6 +7,7 @@ import { isArcadePhysicsBody } from '../../common/utils';
 import { StateMachine } from '../../components/state-machine/state-machine';
 import { IdleState } from '../../components/state-machine/states/character/idle-state';
 import { CHARACTER_STATES } from '../../components/state-machine/states/character/character-states';
+import { MoveState } from '../../components/state-machine/states/character/move-state';
 
 export type PlayerConfig = {
   scene: Phaser.Scene;
@@ -34,6 +35,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
     this.#stateMachine = new StateMachine('player');
     this.#stateMachine.addState(new IdleState(this));
+    this.#stateMachine.addState(new MoveState(this));
     this.#stateMachine.setState(CHARACTER_STATES.IDLE_STATE);
 
     config.scene.events.on(Phaser.Scenes.Events.UPDATE, this.update, this);
@@ -81,7 +83,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     this.#normalizeVelocity();
-    // this.#stateMachine.update();
+    this.#stateMachine.update();
   }
 
   #updateVelocity(isX: boolean, value: number): void {
