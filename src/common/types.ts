@@ -1,5 +1,6 @@
 import { CHARACTER_ANIMATIONS } from './assets';
 import * as Phaser from 'phaser';
+import { DIRECTION } from './common';
 
 export type CharacterAnimation = keyof typeof CHARACTER_ANIMATIONS;
 
@@ -9,3 +10,5 @@ export type Position = {
 };
 
 export type GameObject = Phaser.GameObjects.Sprite | Phaser.GameObjects.Image;
+
+export type Direction = keyof typeof DIRECTION;

@@ -1,5 +1,5 @@
 import * as Phaser from 'phaser';
-import { Position } from '../../common/types';
+import { Direction, Position } from '../../common/types';
 // import { PLAYER_ANIMATION_KEYS } from '../../common/assets';
 import { InputComponent } from '../../components/input/Input-component';
 import { ControlComponent } from '../../components/game-object/controls-component';
@@ -10,6 +10,7 @@ import { CHARACTER_STATES } from '../../components/state-machine/states/characte
 import { MoveState } from '../../components/state-machine/states/character/move-state';
 import { SpeedComponent } from '../../components/game-object/speed-component';
 import { PLAYER_SPEED } from '../../common/config';
+import { DirectionComponent } from '../../components/game-object/direction-component';
 
 export type PlayerConfig = {
   scene: Phaser.Scene;
@@ -22,6 +23,7 @@ export type PlayerConfig = {
 export class Player extends Phaser.Physics.Arcade.Sprite {
   #controlsComponent: ControlComponent;
   #speedComponent: SpeedComponent;
+  #directionComponent: DirectionComponent;
   #stateMachine: StateMachine;
 
   constructor(config: PlayerConfig) {
@@ -34,6 +36,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
     this.#controlsComponent = new ControlComponent(this, config.controls);
     this.#speedComponent = new SpeedComponent(this, PLAYER_SPEED);
+    this.#directionComponent = new DirectionComponent(this);
 
     // this.play({ key: PLAYER_ANIMATION_KEYS.IDLE_DOWN, repeat: -1 });
 
@@ -54,6 +57,13 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
   get speed(): number {
     return this.#speedComponent.speed;
+  }
+
+  get direction(): Direction {
+    return this.#directionComponent.direction;
+  }
+  set direction(value: Direction) {
+    this.#directionComponent.direction = value;
   }
 
   update(): void {
