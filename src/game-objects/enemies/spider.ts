@@ -4,7 +4,12 @@ import { InputComponent } from '../../components/input/Input-component';
 import { IdleState } from '../../components/state-machine/states/character/idle-state';
 import { CHARACTER_STATES } from '../../components/state-machine/states/character/character-states';
 import { MoveState } from '../../components/state-machine/states/character/move-state';
-import { ENEMY_SPIDER_CHANGE_DIRECTION_DELAY_MAX, ENEMY_SPIDER_CHANGE_DIRECTION_DELAY_MIN, ENEMY_SPIDER_CHANGE_DIRECTION_DELAY_WAIT, ENEMY_SPIDER_SPEED } from '../../common/config';
+import {
+  ENEMY_SPIDER_CHANGE_DIRECTION_DELAY_MAX,
+  ENEMY_SPIDER_CHANGE_DIRECTION_DELAY_MIN,
+  ENEMY_SPIDER_CHANGE_DIRECTION_DELAY_WAIT,
+  ENEMY_SPIDER_SPEED,
+} from '../../common/config';
 import { AnimationConfig } from '../../components/game-object/animation-component';
 import { ASSET_KEYS, SPIDER_ANIMATION_KEYS } from '../../common/assets';
 import { CharacterGameObject } from '../common/character-game-object';
