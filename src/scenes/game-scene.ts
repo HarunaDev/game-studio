@@ -25,8 +25,6 @@ export class GameScene extends Phaser.Scene {
     this.#player = new Player({
       scene: this,
       position: { x: this.scale.width / 2, y: this.scale.height / 2 },
-      assetKey: ASSET_KEYS.PLAYER,
-      frame: 0,
       controls: this.#controls,
     });
   }
