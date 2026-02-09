@@ -1,91 +1,48 @@
 import * as Phaser from 'phaser';
-import { Direction, Position } from '../../common/types';
-// import { PLAYER_ANIMATION_KEYS } from '../../common/assets';
+import { Position } from '../../common/types';
 import { InputComponent } from '../../components/input/Input-component';
-import { ControlComponent } from '../../components/game-object/controls-component';
-// import { isArcadePhysicsBody } from '../../common/utils';
-import { StateMachine } from '../../components/state-machine/state-machine';
 import { IdleState } from '../../components/state-machine/states/character/idle-state';
 import { CHARACTER_STATES } from '../../components/state-machine/states/character/character-states';
 import { MoveState } from '../../components/state-machine/states/character/move-state';
-import { SpeedComponent } from '../../components/game-object/speed-component';
-import { PLAYER_SPEED } from '../../common/config';
-import { DirectionComponent } from '../../components/game-object/direction-component';
-import { AnimationComponent, AnimationConfig } from '../../components/game-object/animation-component';
-import { PLAYER_ANIMATION_KEYS } from '../../common/assets';
+import { ENEMY_SPIDER_SPEED } from '../../common/config';
+import { AnimationConfig } from '../../components/game-object/animation-component';
+import { ASSET_KEYS, SPIDER_ANIMATION_KEYS } from '../../common/assets';
+import { CharacterGameObject } from '../common/character-game-object';
 
 export type SpiderConfig = {
   scene: Phaser.Scene;
   position: Position;
-  assetKey: string;
-  frame?: number;
-  controls: InputComponent;
+//   controls: InputComponent;
 };
 
-export class Spider extends Phaser.Physics.Arcade.Sprite {
-  #controlsComponent: ControlComponent;
-  #speedComponent: SpeedComponent;
-  #directionComponent: DirectionComponent;
-  #animationComponent: AnimationComponent;
-  #stateMachine: StateMachine;
-
+export class Spider extends CharacterGameObject {
   constructor(config: SpiderConfig) {
-    const { scene, position, assetKey, frame } = config;
-    const { x, y } = position;
-    super(scene, x, y, assetKey, frame || 0);
-
-    scene.add.existing(this);
-    scene.physics.add.existing(this);
-
+    const animConfig = { key: SPIDER_ANIMATION_KEYS.WALK, repeat: -1, ignoreIfPlaying: true };
     const animationConfig: AnimationConfig = {
-      WALK_DOWN: { key: PLAYER_ANIMATION_KEYS.WALK_DOWN, repeat: -1, ignoreIfPlaying: true },
-      WALK_UP: { key: PLAYER_ANIMATION_KEYS.WALK_UP, repeat: -1, ignoreIfPlaying: true },
-      WALK_LEFT: { key: PLAYER_ANIMATION_KEYS.WALK_SIDE, repeat: -1, ignoreIfPlaying: true },
-      WALK_RIGHT: { key: PLAYER_ANIMATION_KEYS.WALK_SIDE, repeat: -1, ignoreIfPlaying: true },
-      IDLE_DOWN: { key: PLAYER_ANIMATION_KEYS.IDLE_DOWN, repeat: -1, ignoreIfPlaying: true },
-      IDLE_UP: { key: PLAYER_ANIMATION_KEYS.IDLE_UP, repeat: -1, ignoreIfPlaying: true },
-      IDLE_LEFT: { key: PLAYER_ANIMATION_KEYS.IDLE_SIDE, repeat: -1, ignoreIfPlaying: true },
-      IDLE_RIGHT: { key: PLAYER_ANIMATION_KEYS.IDLE_SIDE, repeat: -1, ignoreIfPlaying: true },
+      WALK_DOWN: animConfig,
+      WALK_UP: animConfig,
+      WALK_LEFT: animConfig,
+      WALK_RIGHT: animConfig,
+      IDLE_DOWN: animConfig,
+      IDLE_UP: animConfig,
+      IDLE_LEFT: animConfig,
+      IDLE_RIGHT: animConfig,
     };
 
-    this.#controlsComponent = new ControlComponent(this, config.controls);
-    this.#speedComponent = new SpeedComponent(this, PLAYER_SPEED);
-    this.#directionComponent = new DirectionComponent(this);
-    this.#animationComponent = new AnimationComponent(this, animationConfig);
-
-    // this.play({ key: PLAYER_ANIMATION_KEYS.IDLE_DOWN, repeat: -1 });
-
-    this.#stateMachine = new StateMachine('player');
-    this.#stateMachine.addState(new IdleState(this));
-    this.#stateMachine.addState(new MoveState(this));
-    this.#stateMachine.setState(CHARACTER_STATES.IDLE_STATE);
-
-    config.scene.events.on(Phaser.Scenes.Events.UPDATE, this.update, this);
-    config.scene.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
-      config.scene.events.off(Phaser.Scenes.Events.UPDATE, this.update, this);
+    super({
+      scene: config.scene,
+      position: config.position,
+      assetKey: ASSET_KEYS.SPIDER,
+      frame: 0,
+      id: `spider-${Phaser.Math.RND.uuid()}`,
+      isPlayer: false,
+      animationConfig,
+      speed: ENEMY_SPIDER_SPEED,
+      inputComponent: new InputComponent(),
     });
-  }
 
-  get controls(): InputComponent {
-    return this.#controlsComponent.controls;
-  }
-
-  get speed(): number {
-    return this.#speedComponent.speed;
-  }
-
-  get direction(): Direction {
-    return this.#directionComponent.direction;
-  }
-  set direction(value: Direction) {
-    this.#directionComponent.direction = value;
-  }
-
-  get animationComponent(): AnimationComponent {
-    return this.#animationComponent;
-  }
-
-  update(): void {
-    this.#stateMachine.update();
+    this._stateMachine.addState(new IdleState(this));
+    this._stateMachine.addState(new MoveState(this));
+    this._stateMachine.setState(CHARACTER_STATES.IDLE_STATE);
   }
 }
