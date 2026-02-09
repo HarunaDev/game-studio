@@ -1,21 +1,16 @@
 import * as Phaser from 'phaser';
-import { Direction, Position } from '../../common/types';
+import { Position } from '../../common/types';
 import { InputComponent } from '../../components/input/Input-component';
-import { IdleState } from '../../components/state-machine/states/character/idle-state';
+// import { IdleState } from '../../components/state-machine/states/character/idle-state';
 import { CHARACTER_STATES } from '../../components/state-machine/states/character/character-states';
-import { MoveState } from '../../components/state-machine/states/character/move-state';
-import {
-  ENEMY_SPIDER_CHANGE_DIRECTION_DELAY_MAX,
-  ENEMY_SPIDER_CHANGE_DIRECTION_DELAY_MIN,
-  ENEMY_SPIDER_CHANGE_DIRECTION_DELAY_WAIT,
-  ENEMY_SPIDER_SPEED,
-  ENEMY_WISP_SPEED,
-} from '../../common/config';
+// import { MoveState } from '../../components/state-machine/states/character/move-state';
+import { ENEMY_WISP_SPEED } from '../../common/config';
 import { AnimationConfig } from '../../components/game-object/animation-component';
-import { ASSET_KEYS, SPIDER_ANIMATION_KEYS, WISP_ANIMATION_KEYS } from '../../common/assets';
+import { ASSET_KEYS, WISP_ANIMATION_KEYS } from '../../common/assets';
 import { CharacterGameObject } from '../common/character-game-object';
-import { DIRECTION } from '../../common/common';
-import { exhaustiveGuard } from '../../common/utils';
+// import { DIRECTION } from '../../common/common';
+// import { exhaustiveGuard } from '../../common/utils';
+import { BounceMoveState } from '../../components/state-machine/states/character/bounce-move-state';
 
 export type WispConfig = {
   scene: Phaser.Scene;
@@ -45,7 +40,7 @@ export class Wisp extends CharacterGameObject {
       inputComponent: new InputComponent(),
     });
 
-    this._stateMachine.addState(new IdleState(this));
-    this._stateMachine.setState(CHARACTER_STATES.IDLE_STATE);
+    this._stateMachine.addState(new BounceMoveState(this));
+    this._stateMachine.setState(CHARACTER_STATES.BOUNCE_MOVE_STATE);
   }
 }
