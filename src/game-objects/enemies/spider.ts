@@ -66,6 +66,13 @@ export class Spider extends CharacterGameObject {
       } else {
         this.controls.isLeftDown = true;
       }
+
+      this.scene.time.addEvent({
+        delay: Phaser.Math.Between(500, 1500),
+        callback: this.#changeDirection,
+        callbackScope: this,
+        loop: false,
+      });
     });
   }
 }
