@@ -1,5 +1,5 @@
 import * as Phaser from 'phaser';
-import { Position } from '../../common/types';
+import { Direction, Position } from '../../common/types';
 import { InputComponent } from '../../components/input/Input-component';
 import { IdleState } from '../../components/state-machine/states/character/idle-state';
 import { CHARACTER_STATES } from '../../components/state-machine/states/character/character-states';
@@ -8,6 +8,8 @@ import { ENEMY_SPIDER_SPEED } from '../../common/config';
 import { AnimationConfig } from '../../components/game-object/animation-component';
 import { ASSET_KEYS, SPIDER_ANIMATION_KEYS } from '../../common/assets';
 import { CharacterGameObject } from '../common/character-game-object';
+import { DIRECTION } from '../../common/common';
+import { exhaustiveGuard } from '../../common/utils';
 
 export type SpiderConfig = {
   scene: Phaser.Scene;
@@ -41,6 +43,10 @@ export class Spider extends CharacterGameObject {
       inputComponent: new InputComponent(),
     });
 
+    this._directionComponent.callback = (direction: Direction) => {
+      this.#handleDirectionChange(direction);
+    };
+
     this._stateMachine.addState(new IdleState(this));
     this._stateMachine.addState(new MoveState(this));
     this._stateMachine.setState(CHARACTER_STATES.IDLE_STATE);
@@ -51,6 +57,25 @@ export class Spider extends CharacterGameObject {
       callbackScope: this,
       loop: false,
     });
+  }
+
+  #handleDirectionChange(direction: Direction): void {
+    switch (direction) {
+      case DIRECTION.DOWN:
+        this.setAngle(0);
+        break;
+      case DIRECTION.UP:
+        this.setAngle(180);
+        break;
+      case DIRECTION.LEFT:
+        this.setAngle(90);
+        break;
+      case DIRECTION.RIGHT:
+        this.setAngle(270);
+        break;
+      default:
+        exhaustiveGuard(direction);
+    }
   }
 
   #changeDirection(): void {
