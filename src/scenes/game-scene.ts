@@ -8,6 +8,7 @@ import { Spider } from '../game-objects/enemies/spider';
 export class GameScene extends Phaser.Scene {
   #controls!: KeyboardComponent;
   #player!: Player;
+  #spider!: Spider;
   constructor() {
     super({
       key: SCENE_KEYS.GAME_SCENE,
@@ -29,9 +30,13 @@ export class GameScene extends Phaser.Scene {
       controls: this.#controls,
     });
 
-    new Spider({
+    this.#spider = new Spider({
       scene: this,
       position: { x: this.scale.width / 2, y: this.scale.height / 2 },
     });
+  }
+
+  public update(): void {
+    this.#spider.update();
   }
 }

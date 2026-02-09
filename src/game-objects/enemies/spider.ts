@@ -12,7 +12,7 @@ import { CharacterGameObject } from '../common/character-game-object';
 export type SpiderConfig = {
   scene: Phaser.Scene;
   position: Position;
-//   controls: InputComponent;
+  //   controls: InputComponent;
 };
 
 export class Spider extends CharacterGameObject {
@@ -44,5 +44,28 @@ export class Spider extends CharacterGameObject {
     this._stateMachine.addState(new IdleState(this));
     this._stateMachine.addState(new MoveState(this));
     this._stateMachine.setState(CHARACTER_STATES.IDLE_STATE);
+
+    this.scene.time.addEvent({
+      delay: Phaser.Math.Between(500, 1500),
+      callback: this.#changeDirection,
+      callbackScope: this,
+      loop: false,
+    });
+  }
+
+  #changeDirection(): void {
+    this.controls.reset();
+    this.scene.time.delayedCall(200, () => {
+      const randomDirection = Phaser.Math.Between(0, 3);
+      if (randomDirection === 0) {
+        this.controls.isUpDown = true;
+      } else if (randomDirection === 1) {
+        this.controls.isRightDown = true;
+      } else if (randomDirection === 2) {
+        this.controls.isDownDown = true;
+      } else {
+        this.controls.isLeftDown = true;
+      }
+    });
   }
 }
