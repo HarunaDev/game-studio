@@ -9,8 +9,9 @@ import { Wisp } from '../game-objects/enemies/wisp';
 export class GameScene extends Phaser.Scene {
   #controls!: KeyboardComponent;
   #player!: Player;
-  #spider!: Spider;
-  #wisp!: Wisp;
+  // #spider!: Spider;
+  // #wisp!: Wisp;
+  #enemyGroup!: Phaser.GameObjects.Group;
   constructor() {
     super({
       key: SCENE_KEYS.GAME_SCENE,
@@ -33,21 +34,33 @@ export class GameScene extends Phaser.Scene {
       controls: this.#controls,
     });
 
-    this.#spider = new Spider({
-      scene: this,
-      position: { x: this.scale.width / 2, y: this.scale.height / 2 },
-    });
-    this.#spider.setCollideWorldBounds(true);
+    this.#enemyGroup = this.add.group(
+      [
+        new Spider({
+          scene: this,
+          position: { x: this.scale.width / 2, y: this.scale.height / 2 },
+        }),
 
-    this.#wisp = new Wisp({
-      scene: this,
-      position: { x: this.scale.width / 2, y: this.scale.height / 2 - 50 },
-    });
-    this.#wisp.setCollideWorldBounds(true);
+        new Wisp({
+          scene: this,
+          position: { x: this.scale.width / 2, y: this.scale.height / 2 - 50 },
+        }),
+      ],
+      {
+        runChildUpdate: true,
+      },
+    );
+    this.#registerColliders();
   }
 
-  public update(): void {
-    this.#spider.update();
-    this.#wisp.update();
+  #registerColliders(): void {
+    this.#enemyGroup.getChildren().forEach((enemy) => {
+      const enemyGameObject = enemy as CharacterGameObject;
+      enemyGameObject.setCollideWorldBounds(true);
+    });
+
+    this.physics.add.overlap(this.#player, this.#enemyGroup, (player, enemy) => {
+      console.log('hit');
+    });
   }
 }
