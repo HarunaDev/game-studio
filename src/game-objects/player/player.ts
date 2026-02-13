@@ -9,6 +9,7 @@ import { AnimationConfig } from '../../components/game-object/animation-componen
 import { ASSET_KEYS, PLAYER_ANIMATION_KEYS } from '../../common/assets';
 import { CharacterGameObject } from '../common/character-game-object';
 import { HurtState } from '../../components/state-machine/states/character/hurt-state';
+import { flash } from '../../common/juice-utils';
 
 export type PlayerConfig = {
   scene: Phaser.Scene;
@@ -51,7 +52,7 @@ export class Player extends CharacterGameObject {
     this._stateMachine.addState(new MoveState(this));
     this._stateMachine.addState(
       new HurtState(this, PLAYER_HURT_PUSH_BACK_SPEED, () => {
-        console.log('callback');
+        flash(this);
       }),
     );
     this._stateMachine.setState(CHARACTER_STATES.IDLE_STATE);
