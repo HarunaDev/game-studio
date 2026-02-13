@@ -5,6 +5,8 @@ import { Player } from '../game-objects/player/player';
 import { KeyboardComponent } from '../components/input/keyboard-component';
 import { Spider } from '../game-objects/enemies/spider';
 import { Wisp } from '../game-objects/enemies/wisp';
+import { DIRECTION } from '../common/common';
+import { CharacterGameObject } from '../game-objects/common/character-game-object';
 
 export class GameScene extends Phaser.Scene {
   #controls!: KeyboardComponent;
@@ -60,7 +62,9 @@ export class GameScene extends Phaser.Scene {
     });
 
     this.physics.add.overlap(this.#player, this.#enemyGroup, (player, enemy) => {
-      console.log('hit');
+      this.#player.hit(DIRECTION.DOWN);
+      const enemyGameObject = enemy as CharacterGameObject;
+      enemyGameObject.hit(this.#player.direction);
     });
   }
 }

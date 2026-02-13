@@ -4,10 +4,11 @@ import { InputComponent } from '../../components/input/Input-component';
 import { IdleState } from '../../components/state-machine/states/character/idle-state';
 import { CHARACTER_STATES } from '../../components/state-machine/states/character/character-states';
 import { MoveState } from '../../components/state-machine/states/character/move-state';
-import { PLAYER_INVULNERABLE_AFTER_HIT_DURATION, PLAYER_SPEED } from '../../common/config';
+import { PLAYER_HURT_PUSH_BACK_SPEED, PLAYER_INVULNERABLE_AFTER_HIT_DURATION, PLAYER_SPEED } from '../../common/config';
 import { AnimationConfig } from '../../components/game-object/animation-component';
 import { ASSET_KEYS, PLAYER_ANIMATION_KEYS } from '../../common/assets';
 import { CharacterGameObject } from '../common/character-game-object';
+import { HurtState } from '../../components/state-machine/states/character/hurt-state';
 
 export type PlayerConfig = {
   scene: Phaser.Scene;
@@ -26,6 +27,10 @@ export class Player extends CharacterGameObject {
       IDLE_UP: { key: PLAYER_ANIMATION_KEYS.IDLE_UP, repeat: -1, ignoreIfPlaying: true },
       IDLE_LEFT: { key: PLAYER_ANIMATION_KEYS.IDLE_SIDE, repeat: -1, ignoreIfPlaying: true },
       IDLE_RIGHT: { key: PLAYER_ANIMATION_KEYS.IDLE_SIDE, repeat: -1, ignoreIfPlaying: true },
+      HURT_DOWN: { key: PLAYER_ANIMATION_KEYS.HURT_DOWN, repeat: 0, ignoreIfPlaying: true },
+      HURT_UP: { key: PLAYER_ANIMATION_KEYS.HURT_UP, repeat: 0, ignoreIfPlaying: true },
+      HURT_LEFT: { key: PLAYER_ANIMATION_KEYS.HURT_SIDE, repeat: 0, ignoreIfPlaying: true },
+      HURT_RIGHT: { key: PLAYER_ANIMATION_KEYS.HURT_SIDE, repeat: 0, ignoreIfPlaying: true },
     };
 
     super({
@@ -44,6 +49,11 @@ export class Player extends CharacterGameObject {
 
     this._stateMachine.addState(new IdleState(this));
     this._stateMachine.addState(new MoveState(this));
+    this._stateMachine.addState(
+      new HurtState(this, PLAYER_HURT_PUSH_BACK_SPEED, () => {
+        console.log('callback');
+      }),
+    );
     this._stateMachine.setState(CHARACTER_STATES.IDLE_STATE);
 
     config.scene.events.on(Phaser.Scenes.Events.UPDATE, this.update, this);
