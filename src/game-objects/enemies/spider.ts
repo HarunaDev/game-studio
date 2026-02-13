@@ -116,7 +116,7 @@ export class Spider extends CharacterGameObject {
       }
 
       this.scene.time.addEvent({
-        delay: Phaser.Math.Between(500, 1500),
+        delay: Phaser.Math.Between(ENEMY_SPIDER_CHANGE_DIRECTION_DELAY_MIN, ENEMY_SPIDER_CHANGE_DIRECTION_DELAY_MAX),
         callback: this.#changeDirection,
         callbackScope: this,
         loop: false,

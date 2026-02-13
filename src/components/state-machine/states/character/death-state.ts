@@ -7,7 +7,8 @@ import { CHARACTER_STATES } from './character-states';
 
 export class DeathState extends BaseCharacterState {
   #onDieCallBack: () => void;
-  constructor(gameObject: CharacterGameObject, onDieCallBack: () => undefined) {
+
+  constructor(gameObject: CharacterGameObject, onDieCallBack: () => void = () => undefined) {
     super(CHARACTER_STATES.DEATH_STATE, gameObject);
     this.#onDieCallBack = onDieCallBack;
   }

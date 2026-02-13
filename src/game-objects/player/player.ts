@@ -64,7 +64,7 @@ export class Player extends CharacterGameObject {
         flash(this);
       }),
     );
-    this._stateMachine.addState(new DeathState(this,));
+    this._stateMachine.addState(new DeathState(this));
     this._stateMachine.setState(CHARACTER_STATES.IDLE_STATE);
 
     config.scene.events.on(Phaser.Scenes.Events.UPDATE, this.update, this);
