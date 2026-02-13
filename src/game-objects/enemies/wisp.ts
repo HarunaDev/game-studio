@@ -5,6 +5,7 @@ import { InputComponent } from '../../components/input/Input-component';
 import { CHARACTER_STATES } from '../../components/state-machine/states/character/character-states';
 // import { MoveState } from '../../components/state-machine/states/character/move-state';
 import {
+  ENEMY_WISP_MAX_HEALTH,
   ENEMY_WISP_PULSE_ANIMATION_DURATION,
   ENEMY_WISP_PULSE_ANIMATION_SCALE_X,
   ENEMY_WISP_PULSE_ANIMATION_SCALE_Y,
@@ -44,6 +45,7 @@ export class Wisp extends CharacterGameObject {
       speed: ENEMY_WISP_SPEED,
       inputComponent: new InputComponent(),
       isInvulnerable: true,
+      maxLife: ENEMY_WISP_MAX_HEALTH,
     });
 
     this._stateMachine.addState(new BounceMoveState(this));

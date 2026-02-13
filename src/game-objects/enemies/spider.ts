@@ -8,6 +8,7 @@ import {
   ENEMY_SPIDER_CHANGE_DIRECTION_DELAY_MAX,
   ENEMY_SPIDER_CHANGE_DIRECTION_DELAY_MIN,
   ENEMY_SPIDER_CHANGE_DIRECTION_DELAY_WAIT,
+  ENEMY_SPIDER_MAX_HEALTH,
   ENEMY_SPIDER_PUSH_BACK_SPEED,
   ENEMY_SPIDER_SPEED,
 } from '../../common/config';
@@ -17,6 +18,7 @@ import { CharacterGameObject } from '../common/character-game-object';
 import { DIRECTION } from '../../common/common';
 import { exhaustiveGuard } from '../../common/utils';
 import { HurtState } from '../../components/state-machine/states/character/hurt-state';
+import { DeathState } from '../../components/state-machine/states/character/death-state';
 
 export type SpiderConfig = {
   scene: Phaser.Scene;
@@ -28,6 +30,7 @@ export class Spider extends CharacterGameObject {
   constructor(config: SpiderConfig) {
     const animConfig = { key: SPIDER_ANIMATION_KEYS.WALK, repeat: -1, ignoreIfPlaying: true };
     const hurtAnimConfig = { key: SPIDER_ANIMATION_KEYS.HIT, repeat: 0, ignoreIfPlaying: true };
+    const deathAnimConfig = { key: SPIDER_ANIMATION_KEYS.DEATH, repeat: 0, ignoreIfPlaying: true };
     const animationConfig: AnimationConfig = {
       WALK_DOWN: animConfig,
       WALK_UP: animConfig,
@@ -41,6 +44,10 @@ export class Spider extends CharacterGameObject {
       HURT_UP: hurtAnimConfig,
       HURT_LEFT: hurtAnimConfig,
       HURT_RIGHT: hurtAnimConfig,
+      DIE_DOWN: deathAnimConfig,
+      DIE_UP: deathAnimConfig,
+      DIE_LEFT: deathAnimConfig,
+      DIE_RIGHT: deathAnimConfig,
     };
 
     super({
@@ -54,6 +61,7 @@ export class Spider extends CharacterGameObject {
       speed: ENEMY_SPIDER_SPEED,
       inputComponent: new InputComponent(),
       isInvulnerable: false,
+      maxLife: ENEMY_SPIDER_MAX_HEALTH,
     });
 
     this._directionComponent.callback = (direction: Direction) => {
@@ -63,6 +71,7 @@ export class Spider extends CharacterGameObject {
     this._stateMachine.addState(new IdleState(this));
     this._stateMachine.addState(new MoveState(this));
     this._stateMachine.addState(new HurtState(this, ENEMY_SPIDER_PUSH_BACK_SPEED));
+    this._stateMachine.addState(new DeathState(this));
     this._stateMachine.setState(CHARACTER_STATES.IDLE_STATE);
 
     this.scene.time.addEvent({
