@@ -17,6 +17,8 @@ export class GameScene extends Phaser.Scene {
   // #spider!: Spider;
   // #wisp!: Wisp;
   #enemyGroup!: Phaser.GameObjects.Group;
+  // group to track of game objects to colide with
+  #blockingGroup!: Phaser.GameObjects.Group;
   constructor() {
     super({
       key: SCENE_KEYS.GAME_SCENE,
@@ -58,22 +60,26 @@ export class GameScene extends Phaser.Scene {
       },
     );
 
-    new Pot({
-      scene: this,
-      position: { x: this.scale.width / 2 + 90, y: this.scale.height / 2 },
-    });
+    // blocking group
+    this.#blockingGroup = this.add.group([
+      new Pot({
+        scene: this,
+        position: { x: this.scale.width / 2 + 90, y: this.scale.height / 2 },
+      }),
 
-    new Chest({
-      scene: this,
-      position: { x: this.scale.width / 2 - 90, y: this.scale.height / 2 },
-      requiresBossKey: false,
-    });
+      new Chest({
+        scene: this,
+        position: { x: this.scale.width / 2 - 90, y: this.scale.height / 2 },
+        requiresBossKey: false,
+      }),
 
-    new Chest({
-      scene: this,
-      position: { x: this.scale.width / 2 - 90, y: this.scale.height / 2 - 90 },
-      requiresBossKey: true,
-    });
+      new Chest({
+        scene: this,
+        position: { x: this.scale.width / 2 - 90, y: this.scale.height / 2 - 90 },
+        requiresBossKey: true,
+      }),
+    ]);
+
     this.#registerColliders();
   }
 
@@ -87,6 +93,16 @@ export class GameScene extends Phaser.Scene {
       this.#player.hit(DIRECTION.DOWN, 1);
       const enemyGameObject = enemy as CharacterGameObject;
       enemyGameObject.hit(this.#player.direction, 1);
+    });
+
+    // colisions between player and blocing group
+    this.physics.add.collider(this.#player, this.#blockingGroup, (player, gameObject) => {
+      //
+    });
+
+    // colisions between enemy and blocing group
+    this.physics.add.collider(this.#enemyGroup, this.#blockingGroup, (enemy, gameObject) => {
+      //
     });
   }
 }
