@@ -1,7 +1,7 @@
 import { GameObject } from '../../common/types';
 import { BaseGameObjectComponent } from './base-game-object';
 
-export class CollidingObjectComponent extends BaseGameObjectComponent {
+export class CollidingObjectsComponent extends BaseGameObjectComponent {
   #objects: GameObject[];
 
   constructor(gameObject: GameObject) {

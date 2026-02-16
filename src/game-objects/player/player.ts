@@ -1,5 +1,5 @@
 import * as Phaser from 'phaser';
-import { Position } from '../../common/types';
+import { GameObject, Position } from '../../common/types';
 import { InputComponent } from '../../components/input/Input-component';
 import { IdleState } from '../../components/state-machine/states/character/idle-state';
 import { CHARACTER_STATES } from '../../components/state-machine/states/character/character-states';
@@ -11,6 +11,7 @@ import { CharacterGameObject } from '../common/character-game-object';
 import { HurtState } from '../../components/state-machine/states/character/hurt-state';
 import { flash } from '../../common/juice-utils';
 import { DeathState } from '../../components/state-machine/states/character/death-state';
+import { CollidingObjectsComponent } from '../../components/game-object/colliding-object-component';
 
 export type PlayerConfig = {
   scene: Phaser.Scene;
@@ -21,6 +22,7 @@ export type PlayerConfig = {
 };
 
 export class Player extends CharacterGameObject {
+  #collidingObjectsComponent: CollidingObjectsComponent;
   constructor(config: PlayerConfig) {
     const animationConfig: AnimationConfig = {
       WALK_DOWN: { key: PLAYER_ANIMATION_KEYS.WALK_DOWN, repeat: -1, ignoreIfPlaying: true },
@@ -57,6 +59,9 @@ export class Player extends CharacterGameObject {
       currentLife: config.currentLife,
     });
 
+    // add colliding and interactivity class
+    this.#collidingObjectsComponent = new CollidingObjectsComponent(this);
+
     this._stateMachine.addState(new IdleState(this));
     this._stateMachine.addState(new MoveState(this));
     this._stateMachine.addState(
@@ -77,5 +82,16 @@ export class Player extends CharacterGameObject {
 
   get physicsBody(): Phaser.Physics.Arcade.Body {
     return this.body as Phaser.Physics.Arcade.Body;
+  }
+
+  // add object to component when player collides with it
+  public collidedWithGameObject(gameObject: GameObject): void {
+    this.#collidingObjectsComponent.add(gameObject);
+  }
+
+  // reset function on parent component
+  public update(): void {
+    super.update();
+    this.#collidingObjectsComponent.reset();
   }
 }

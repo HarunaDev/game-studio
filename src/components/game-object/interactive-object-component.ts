@@ -1,7 +1,7 @@
 import { GameObject, InteractiveObjectType } from '../../common/types';
 import { BaseGameObjectComponent } from './base-game-object';
 
-export class InteractingObjectComponent extends BaseGameObjectComponent {
+export class InteractiveObjectComponent extends BaseGameObjectComponent {
   #objectType: InteractiveObjectType;
   #callback: () => void; // call function to make player do something after interacting with object
   #canInteractCheck: () => boolean;

@@ -10,6 +10,7 @@ import { CharacterGameObject } from '../game-objects/common/character-game-objec
 import { PLAYER_START_MAX_HEALTH } from '../common/config';
 import { Pot } from '../game-objects/objects/pot';
 import { Chest } from '../game-objects/objects/chest';
+import { GameObject } from '../common/types';
 
 export class GameScene extends Phaser.Scene {
   #controls!: KeyboardComponent;
@@ -97,7 +98,7 @@ export class GameScene extends Phaser.Scene {
 
     // colisions between player and blocing group
     this.physics.add.collider(this.#player, this.#blockingGroup, (player, gameObject) => {
-      //
+      this.#player.collidedWithGameObject(gameObject as GameObject);
     });
 
     // colisions between enemy and blocing group
