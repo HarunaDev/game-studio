@@ -9,6 +9,7 @@ import { DIRECTION } from '../common/common';
 import { CharacterGameObject } from '../game-objects/common/character-game-object';
 import { PLAYER_START_MAX_HEALTH } from '../common/config';
 import { Pot } from '../game-objects/objects/pot';
+import { Chest } from '../game-objects/objects/chest';
 
 export class GameScene extends Phaser.Scene {
   #controls!: KeyboardComponent;
@@ -60,6 +61,18 @@ export class GameScene extends Phaser.Scene {
     new Pot({
       scene: this,
       position: { x: this.scale.width / 2 + 90, y: this.scale.height / 2 },
+    });
+
+    new Chest({
+      scene: this,
+      position: { x: this.scale.width / 2 - 90, y: this.scale.height / 2 },
+      requiresBossKey: false,
+    });
+
+    new Chest({
+      scene: this,
+      position: { x: this.scale.width / 2 - 90, y: this.scale.height / 2 - 90 },
+      requiresBossKey: true,
     });
     this.#registerColliders();
   }
