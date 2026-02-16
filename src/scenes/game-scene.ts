@@ -5,7 +5,7 @@ import { Player } from '../game-objects/player/player';
 import { KeyboardComponent } from '../components/input/keyboard-component';
 import { Spider } from '../game-objects/enemies/spider';
 import { Wisp } from '../game-objects/enemies/wisp';
-import { DIRECTION } from '../common/common';
+import { CHEST_STATE, DIRECTION } from '../common/common';
 import { CharacterGameObject } from '../game-objects/common/character-game-object';
 import { PLAYER_START_MAX_HEALTH } from '../common/config';
 import { Pot } from '../game-objects/objects/pot';

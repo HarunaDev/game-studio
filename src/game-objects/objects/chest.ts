@@ -26,5 +26,20 @@ export class Chest extends Phaser.Physics.Arcade.Image {
 
     this.#state = config.chestState || CHEST_STATE.HIDDEN;
     this.#isBossKeyChest = config.requiresBossKey;
+
+    if (this.#isBossKeyChest) {
+      (this.body as Phaser.Physics.Arcade.Body).setSize(32, 24).setOffset(0, 8);
+    }
+  }
+
+  //   method to open chest
+  public open(): void {
+    if (this.#state !== CHEST_STATE.REVEALED) {
+      return;
+    }
+
+    this.#state = CHEST_STATE.OPEN;
+    const frameKey = this.#isBossKeyChest ? CHEST_FRAME_KEYS.BIG_CHEST_OPEN : CHEST_FRAME_KEYS.SMALL_CHEST_OPEN;
+    this.setFrame(frameKey);
   }
 }
