@@ -1,8 +1,14 @@
 // import { PLAYER_ANIMATION_KEYS } from '../../../../common/assets';
-import { DIRECTION } from '../../../../common/common';
+import { DIRECTION, INTERACTIVE_OBJECT_TYPE } from '../../../../common/common';
 import { Direction } from '../../../../common/types';
-import { isArcadePhysicsBody } from '../../../../common/utils';
+import { exhaustiveGuard, isArcadePhysicsBody } from '../../../../common/utils';
 import { CharacterGameObject } from '../../../../game-objects/common/character-game-object';
+import { CollidingObjectsComponent } from '../../../game-object/colliding-object-component';
+import { InteractiveObjectComponent } from '../../../game-object/interactive-object-component';
+// import {
+//   InteractiveObjectsComponent,
+// } from '../../../game-object/interactive-object-component';
+import { InputComponent } from '../../../input/Input-component';
 // import { Player } from '../../../../game-objects/player/player';
 import { BaseCharacterState } from './base-character-state';
 import { CHARACTER_STATES } from './character-states';
@@ -24,8 +30,13 @@ export class MoveState extends BaseCharacterState {
   public onUpdate(): void {
     const controls = this._gameObject.controls;
 
+    //check if input has been provided
     if (!controls.isDownDown && !controls.isUpDown && !controls.isLeftDown && !controls.isRightDown) {
       this._stateMachine.setState(CHARACTER_STATES.IDLE_STATE);
+      return;
+    }
+
+    if (this.#checkIfObjectWasInteractedWith(controls)) {
       return;
     }
 
@@ -87,5 +98,44 @@ export class MoveState extends BaseCharacterState {
   #updateDirection(direction: Direction): void {
     this._gameObject.direction = direction;
     this._gameObject.animationComponent.playAnimation(`WALK_${this._gameObject.direction}`);
+  }
+
+  #checkIfObjectWasInteractedWith(controls: InputComponent): boolean {
+    const collideComponent = CollidingObjectsComponent.getComponent<CollidingObjectsComponent>(this._gameObject);
+
+    if (collideComponent === undefined || collideComponent.objects.length === 0) {
+      return false;
+    }
+
+    const collisionObject = collideComponent.objects[0];
+    const interactiveObjectComponent =
+      InteractiveObjectComponent.getComponent<InteractiveObjectComponent>(collisionObject);
+
+    // if interactive object then we can't interact with that object
+    if (interactiveObjectComponent === undefined) {
+      return false;
+    }
+
+    // check to see if play pressed a key to interact with the object
+    if (!controls.isActionKeyJustDown) {
+      return false;
+    }
+
+    // check the interactive object type in transition to the state
+    if (interactiveObjectComponent.objectType === INTERACTIVE_OBJECT_TYPE.PICKUP) {
+      this._stateMachine.setState(CHARACTER_STATES.LIFT_STATE);
+      return true;
+    }
+
+    if (interactiveObjectComponent.objectType === INTERACTIVE_OBJECT_TYPE.OPEN) {
+      this._stateMachine.setState(CHARACTER_STATES.OPEN_CHEST_STATE);
+      return true;
+    }
+
+    if (interactiveObjectComponent.objectType === INTERACTIVE_OBJECT_TYPE.AUTO) {
+      return false;
+    }
+
+    exhaustiveGuard(interactiveObjectComponent.objectType);
   }
 }
