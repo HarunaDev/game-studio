@@ -71,7 +71,7 @@ export class MoveState extends BaseMoveState {
     }
 
     if (interactiveObjectComponent.objectType === INTERACTIVE_OBJECT_TYPE.OPEN) {
-      this._stateMachine.setState(CHARACTER_STATES.OPEN_CHEST_STATE);
+      this._stateMachine.setState(CHARACTER_STATES.OPEN_CHEST_STATE, collisionObject);
       return true;
     }
 

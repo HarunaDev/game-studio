@@ -5,12 +5,13 @@ import { Player } from '../game-objects/player/player';
 import { KeyboardComponent } from '../components/input/keyboard-component';
 import { Spider } from '../game-objects/enemies/spider';
 import { Wisp } from '../game-objects/enemies/wisp';
-import { CHEST_STATE, DIRECTION } from '../common/common';
+import { DIRECTION } from '../common/common';
 import { CharacterGameObject } from '../game-objects/common/character-game-object';
 import { PLAYER_START_MAX_HEALTH } from '../common/config';
 import { Pot } from '../game-objects/objects/pot';
 import { Chest } from '../game-objects/objects/chest';
 import { GameObject } from '../common/types';
+import { CUSTOM_EVENTS, EVENT_BUS } from '../common/event-bus';
 
 export class GameScene extends Phaser.Scene {
   #controls!: KeyboardComponent;
@@ -82,6 +83,7 @@ export class GameScene extends Phaser.Scene {
     ]);
 
     this.#registerColliders();
+    this.#registerCustomEvents();
   }
 
   #registerColliders(): void {
@@ -105,5 +107,17 @@ export class GameScene extends Phaser.Scene {
     this.physics.add.collider(this.#enemyGroup, this.#blockingGroup, (enemy, gameObject) => {
       //
     });
+  }
+
+  // register events
+  #registerCustomEvents(): void {
+    EVENT_BUS.on(CUSTOM_EVENTS.OPENED_CHEST, this.#handleOpenChest, this);
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+      EVENT_BUS.off(CUSTOM_EVENTS.OPENED_CHEST, this.#handleOpenChest, this);
+    });
+  }
+
+  #handleOpenChest(chest: Chest): void {
+    console.log('chest opened');
   }
 }
