@@ -58,6 +58,12 @@ export class MoveState extends BaseMoveState {
       return false;
     }
 
+    // check if player can interact with an object
+    if (!interactiveObjectComponent.canInteractWith()) {
+      return false;
+    }
+    interactiveObjectComponent.interact();
+
     // check the interactive object type in transition to the state
     if (interactiveObjectComponent.objectType === INTERACTIVE_OBJECT_TYPE.PICKUP) {
       this._stateMachine.setState(CHARACTER_STATES.LIFT_STATE);

@@ -33,7 +33,20 @@ export class Chest extends Phaser.Physics.Arcade.Image {
     }
 
     // add intecactive class
-    new InteractiveObjectComponent(this, INTERACTIVE_OBJECT_TYPE.OPEN);
+    new InteractiveObjectComponent(
+      this,
+      INTERACTIVE_OBJECT_TYPE.OPEN,
+      () => {
+        if (!this.#isBossKeyChest) {
+          return true;
+        }
+        // todo: make sure we have boss key
+        return false;
+      },
+      () => {
+        this.open();
+      },
+    );
   }
 
   //   method to open chest
@@ -45,5 +58,7 @@ export class Chest extends Phaser.Physics.Arcade.Image {
     this.#state = CHEST_STATE.OPEN;
     const frameKey = this.#isBossKeyChest ? CHEST_FRAME_KEYS.BIG_CHEST_OPEN : CHEST_FRAME_KEYS.SMALL_CHEST_OPEN;
     this.setFrame(frameKey);
+    // remove interactive component if chest is already open
+    InteractiveObjectComponent.removeComponent(this);
   }
 }
