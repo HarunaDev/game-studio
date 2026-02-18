@@ -2,9 +2,10 @@ import { DIRECTION } from '../../../../common/common';
 import { Direction } from '../../../../common/types';
 import { isArcadePhysicsBody } from '../../../../common/utils';
 import { CharacterGameObject } from '../../../../game-objects/common/character-game-object';
+import { InputComponent } from '../../../input/Input-component';
 // import { Player } from '../../../../game-objects/player/player';
 import { BaseCharacterState } from './base-character-state';
-import { CHARACTER_STATES } from './character-states';
+// import { CHARACTER_STATES } from './character-states';
 
 export abstract class BaseMoveState extends BaseCharacterState {
   protected _moveAnimationPrefix: 'WALK' | 'WALK_HOLD';
@@ -15,7 +16,7 @@ export abstract class BaseMoveState extends BaseCharacterState {
 
   // if no input provided transition back to idle state
   protected isNoInputMovement(controls: InputComponent): boolean {
-    return !controls.isDownDown && !controls.isUpDown && !controls.isLeftDown && !controls.isRightDown ;
+    return !controls.isDownDown && !controls.isUpDown && !controls.isLeftDown && !controls.isRightDown;
   }
 
   protected handleCharacterMovement(): void {
