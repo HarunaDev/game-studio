@@ -24,7 +24,7 @@ export class ThrowState extends BaseCharacterState {
       return;
     }
 
-    const throwObjectComponent = ThrowableObjectComponent.getComponent<ThrowableObjectComponent>(this._gameObject);
+    const throwObjectComponent = ThrowableObjectComponent.getComponent<ThrowableObjectComponent>(heldComponent.object);
     if (throwObjectComponent !== undefined) {
       throwObjectComponent.throw(this._gameObject.direction);
     }

@@ -15,7 +15,7 @@ export class MoveHoldingState extends BaseMoveState {
     // check if player threw away the object
     if (controls.isActionKeyJustDown) {
       // throw item
-      this._stateMachine.setState(CHARACTER_STATES.IDLE_STATE);
+      this._stateMachine.setState(CHARACTER_STATES.THROW_STATE);
       return;
     }
 
