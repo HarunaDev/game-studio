@@ -1,5 +1,5 @@
 import * as Phaser from 'phaser';
-import { Direction, Position } from '../../common/types';
+import { CustomGameObject, Direction, Position } from '../../common/types';
 // import { PLAYER_ANIMATION_KEYS } from '../../common/assets';
 import { InputComponent } from '../../components/input/Input-component';
 import { ControlComponent } from '../../components/game-object/controls-component';
@@ -33,7 +33,7 @@ export type CharacterConfig = {
   currentLife?: number;
 };
 
-export abstract class CharacterGameObject extends Phaser.Physics.Arcade.Sprite {
+export abstract class CharacterGameObject extends Phaser.Physics.Arcade.Sprite implements CustomGameObject {
   protected _controlsComponent: ControlComponent;
   protected _speedComponent: SpeedComponent;
   protected _directionComponent: DirectionComponent;

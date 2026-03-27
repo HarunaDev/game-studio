@@ -36,6 +36,7 @@ export class PreloadScene extends Phaser.Scene {
       frameRate: 6,
       repeat: 0,
       delay: 0,
+      hideOnComplete: true,
     });
   }
 }

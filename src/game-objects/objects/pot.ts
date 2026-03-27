@@ -1,7 +1,7 @@
 import * as Phaser from 'phaser';
 // import { Position } from '../../common/types';
 import { ASSET_KEYS } from '../../common/assets';
-import { Position } from '../../common/types';
+import { CustomGameObject, Position } from '../../common/types';
 import { InteractiveObjectComponent } from '../../components/game-object/interactive-object-component';
 import { INTERACTIVE_OBJECT_TYPE } from '../../common/common';
 import { ThrowableObjectComponent } from '../../components/game-object/throwable-object-component';
@@ -11,7 +11,7 @@ type PotConfig = {
   position: Position;
 };
 
-export class Pot extends Phaser.Physics.Arcade.Sprite {
+export class Pot extends Phaser.Physics.Arcade.Sprite implements CustomGameObject {
   #position: Position;
 
   constructor(config: PotConfig) {
