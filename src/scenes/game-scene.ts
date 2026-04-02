@@ -22,6 +22,8 @@ export class GameScene extends Phaser.Scene {
   #enemyGroup!: Phaser.GameObjects.Group;
   // group to track of game objects to colide with
   #blockingGroup!: Phaser.GameObjects.Group;
+  // handle when pot collides with other game objects
+  #potGameObjects!: Pot[];
   constructor() {
     super({
       key: SCENE_KEYS.GAME_SCENE,
@@ -55,13 +57,18 @@ export class GameScene extends Phaser.Scene {
       },
     );
 
+    // new pot game object
+    this.#potGameObjects = [];
+    const pot = new Pot({
+      scene: this,
+      position: { x: this.scale.width / 2 + 90, y: this.scale.height / 2 },
+    });
+    this.#potGameObjects.push(pot);
+
     // blocking group
     this.#blockingGroup = this.add.group([
-      new Pot({
-        scene: this,
-        position: { x: this.scale.width / 2 + 90, y: this.scale.height / 2 },
-      }),
-
+      // pot game object
+      pot,
       new Chest({
         scene: this,
         position: { x: this.scale.width / 2 - 90, y: this.scale.height / 2 },
@@ -129,6 +136,15 @@ export class GameScene extends Phaser.Scene {
         return true;
       },
     );
+
+    if (this.#potGameObjects.length > 0) {
+      this.physics.add.collider(this.#potGameObjects, this.#blockingGroup, (pot) => {
+        if (!(pot instanceof Pot)) {
+          return;
+        }
+        pot.break();
+      });
+    }
   }
 
   // register events
