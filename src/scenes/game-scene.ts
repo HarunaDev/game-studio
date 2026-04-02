@@ -12,6 +12,7 @@ import { Pot } from '../game-objects/objects/pot';
 import { Chest } from '../game-objects/objects/chest';
 import { GameObject } from '../common/types';
 import { CUSTOM_EVENTS, EVENT_BUS } from '../common/event-bus';
+import { isArcadePhysicsBody } from '../common/utils';
 
 export class GameScene extends Phaser.Scene {
   #controls!: KeyboardComponent;
@@ -104,9 +105,30 @@ export class GameScene extends Phaser.Scene {
     });
 
     // colisions between enemy and blocing group
-    this.physics.add.collider(this.#enemyGroup, this.#blockingGroup, (enemy, gameObject) => {
-      //
-    });
+    this.physics.add.collider(
+      this.#enemyGroup,
+      this.#blockingGroup,
+      (enemy, gameObject) => {
+        if (
+          gameObject instanceof Pot &&
+          isArcadePhysicsBody(gameObject.body) &&
+          (gameObject.body.velocity.x !== 0 || gameObject.body.velocity.y !== 0)
+        ) {
+          const enemyGameObject = enemy as CharacterGameObject;
+          if (enemyGameObject instanceof CharacterGameObject) {
+            enemyGameObject.hit(this.#player.direction, 1);
+            gameObject.break();
+          }
+        }
+      },
+      (enemy, gameObject) => {
+        const body = (gameObject as unknown as GameObject).body;
+        if (enemy instanceof Wisp && isArcadePhysicsBody(body) && (body.velocity.x !== 0 || body.velocity.y !== 0)) {
+          return false;
+        }
+        return true;
+      },
+    );
   }
 
   // register events
