@@ -1,3 +1,8 @@
+import {
+  LIFT_ITEM_ANIMATION_DELAY,
+  LIFT_ITEM_ANIMATION_DURATION,
+  LIFT_ITEM_ANIMATION_ENABLE_DEBUGGING,
+} from '../../../../common/config';
 import { GameObject } from '../../../../common/types';
 import { isArcadePhysicsBody } from '../../../../common/utils';
 import { CharacterGameObject } from '../../../../game-objects/common/character-game-object';
@@ -44,11 +49,14 @@ export class LiftState extends BaseCharacterState {
     const curve = new Phaser.Curves.CubicBezier(startPoint, controlPoint1, controlPoint2, endPoint);
     const curvePath = new Phaser.Curves.Path(startPoint.x, startPoint.y).add(curve);
 
-    // create graphics object to draw out path
-    const g = this._gameObject.scene.add.graphics();
-    g.clear();
-    // g.lineStyle(4, 0x00ff00, 1);
-    curvePath.draw(g);
+    let g: Phaser.GameObjects.Graphics | undefined;
+    if (LIFT_ITEM_ANIMATION_ENABLE_DEBUGGING) {
+      // create graphics object to draw out path
+      g = this._gameObject.scene.add.graphics();
+      g.clear();
+      g.lineStyle(4, 0x00ff00, 1);
+      curvePath.draw(g);
+    }
     gameObjectBeingPickedUp.setAlpha(0);
 
     // update game object to follow that path
@@ -56,12 +64,13 @@ export class LiftState extends BaseCharacterState {
       .follower(curvePath, startPoint.x, startPoint.y, gameObjectBeingPickedUp.texture)
       .setAlpha(1);
     follower.startFollow({
-      delay: 0,
-      duration: 250,
+      delay: LIFT_ITEM_ANIMATION_DELAY,
+      duration: LIFT_ITEM_ANIMATION_DURATION,
       onComplete: () => {
         follower.destroy();
-        g.destroy();
-
+        if (g !== undefined) {
+          g.destroy();
+        }
         gameObjectBeingPickedUp.setPosition(follower.x, follower.y).setAlpha(1);
       },
     });
