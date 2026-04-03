@@ -4,6 +4,8 @@ import { HURT_PUSH_BACK_DELAY } from '../../../../common/config';
 import { Direction } from '../../../../common/types';
 import { exhaustiveGuard, isArcadePhysicsBody } from '../../../../common/utils';
 import { CharacterGameObject } from '../../../../game-objects/common/character-game-object';
+import { HeldGameObjectComponent } from '../../../game-object/held-game-object-component';
+import { ThrowableObjectComponent } from '../../../game-object/throwable-object-component';
 // import { Player } from '../../../../game-objects/player/player';
 import { BaseCharacterState } from './base-character-state';
 import { CHARACTER_STATES } from './character-states';
@@ -33,6 +35,18 @@ export class HurtState extends BaseCharacterState {
       const body = this._gameObject.body;
       body.velocity.x = 0;
       body.velocity.y = 0;
+
+      // drop object when player collides with enemies
+      const heldComponent = HeldGameObjectComponent.getComponent<HeldGameObjectComponent>(this._gameObject);
+      if (heldComponent !== undefined && heldComponent.object !== undefined) {
+        const throwObjectComponent = ThrowableObjectComponent.getComponent<ThrowableObjectComponent>(
+          heldComponent.object,
+        );
+        if (throwObjectComponent !== undefined) {
+          throwObjectComponent.drop();
+        }
+        heldComponent.drop();
+      }
 
       switch (attackDirection) {
         case DIRECTION.DOWN:
