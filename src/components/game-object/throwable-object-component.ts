@@ -1,6 +1,7 @@
 import { DIRECTION } from '../../common/common';
 import { THROW_ITEM_DELAY_BEFORE_CALLBACK, THROW_ITEM_SPEED } from '../../common/config';
-import { Direction, GameObject, isCustomGameObject } from '../../common/types';
+import { Direction, GameObject } from '../../common/types';
+import { isCustomGameObject } from '../../common/utils';
 import { exhaustiveGuard, isArcadePhysicsBody } from '../../common/utils';
 import { BaseGameObjectComponent } from './base-game-object';
 
