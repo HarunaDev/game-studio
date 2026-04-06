@@ -1,5 +1,5 @@
 import { CHARACTER_ANIMATIONS } from '../../../../common/assets';
-import { isArcadePhysicsBody } from '../../../../common/utils';
+// import { isArcadePhysicsBody } from '../../../../common/utils';
 import { CharacterGameObject } from '../../../../game-objects/common/character-game-object';
 import { HeldGameObjectComponent } from '../../../game-object/held-game-object-component';
 import { ThrowableObjectComponent } from '../../../game-object/throwable-object-component';
@@ -20,10 +20,8 @@ export class DeathState extends BaseCharacterState {
     // this._gameObject.play({ key: PLAYER_ANIMATION_KEYS.IDLE_DOWN, repeat: -1 }, true);
     // this._gameObject.animationComponent.playAnimation(`IDLE_${this._gameObject.direction}`);
 
-    if (isArcadePhysicsBody(this._gameObject.body)) {
-      this._gameObject.body.velocity.x = 0;
-      this._gameObject.body.velocity.y = 0;
-    }
+    // reset game object velocity
+    this._resetObjectVelocity();
 
     // drop object when player collides with enemies
     const heldComponent = HeldGameObjectComponent.getComponent<HeldGameObjectComponent>(this._gameObject);

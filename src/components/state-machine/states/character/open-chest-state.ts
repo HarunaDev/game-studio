@@ -1,5 +1,4 @@
 import { CUSTOM_EVENTS, EVENT_BUS } from '../../../../common/event-bus';
-import { isArcadePhysicsBody } from '../../../../common/utils';
 import { CharacterGameObject } from '../../../../game-objects/common/character-game-object';
 import { Chest } from '../../../../game-objects/objects/chest';
 // import { Player } from '../../../../game-objects/player/player';
@@ -14,10 +13,8 @@ export class OpenChestState extends BaseCharacterState {
   public onEnter(args: unknown[]): void {
     const chest = args[0] as Chest;
 
-    if (isArcadePhysicsBody(this._gameObject.body)) {
-      this._gameObject.body.velocity.x = 0;
-      this._gameObject.body.velocity.y = 0;
-    }
+    // reset object velocity
+    this._resetObjectVelocity();
 
     // play idle animation based on game object direction.
     this._gameObject.animationComponent.playAnimation(`LIFT_${this._gameObject.direction}`, () => {

@@ -1,3 +1,4 @@
+import { isArcadePhysicsBody } from '../../../../common/utils';
 import { CharacterGameObject } from '../../../../game-objects/common/character-game-object';
 // import { Player } from '../../../../game-objects/player/player';
 import { State, StateMachine } from '../../state-machine';
@@ -19,5 +20,13 @@ export abstract class BaseCharacterState implements State {
 
   set stateMachine(stateMachine: StateMachine) {
     this._stateMachine = stateMachine;
+  }
+
+  protected _resetObjectVelocity(): void {
+    if (isArcadePhysicsBody(this._gameObject.body)) {
+      const body = this._gameObject.body;
+      body.velocity.x = 0;
+      body.velocity.y = 0;
+    }
   }
 }

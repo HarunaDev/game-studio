@@ -31,22 +31,24 @@ export class HurtState extends BaseCharacterState {
     const attackDirection = args[0] as Direction;
 
     // reset game object velocity
+    this._resetObjectVelocity();
+
+    // drop object when player collides with enemies
+    const heldComponent = HeldGameObjectComponent.getComponent<HeldGameObjectComponent>(this._gameObject);
+    if (heldComponent !== undefined && heldComponent.object !== undefined) {
+      const throwObjectComponent = ThrowableObjectComponent.getComponent<ThrowableObjectComponent>(
+        heldComponent.object,
+      );
+      if (throwObjectComponent !== undefined) {
+        throwObjectComponent.drop();
+      }
+      heldComponent.drop();
+    }
+
     if (isArcadePhysicsBody(this._gameObject.body)) {
       const body = this._gameObject.body;
-      body.velocity.x = 0;
-      body.velocity.y = 0;
-
-      // drop object when player collides with enemies
-      const heldComponent = HeldGameObjectComponent.getComponent<HeldGameObjectComponent>(this._gameObject);
-      if (heldComponent !== undefined && heldComponent.object !== undefined) {
-        const throwObjectComponent = ThrowableObjectComponent.getComponent<ThrowableObjectComponent>(
-          heldComponent.object,
-        );
-        if (throwObjectComponent !== undefined) {
-          throwObjectComponent.drop();
-        }
-        heldComponent.drop();
-      }
+      // body.velocity.x = 0;
+      // body.velocity.y = 0;
 
       switch (attackDirection) {
         case DIRECTION.DOWN:
@@ -66,8 +68,7 @@ export class HurtState extends BaseCharacterState {
       }
 
       this._gameObject.scene.time.delayedCall(HURT_PUSH_BACK_DELAY, () => {
-        body.velocity.x = 0;
-        body.velocity.y = 0;
+        this._resetObjectVelocity();
       });
     }
 

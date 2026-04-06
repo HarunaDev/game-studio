@@ -1,4 +1,4 @@
-import { isArcadePhysicsBody } from '../../../../common/utils';
+// import { isArcadePhysicsBody } from '../../../../common/utils';
 import { CharacterGameObject } from '../../../../game-objects/common/character-game-object';
 // import { Player } from '../../../../game-objects/player/player';
 import { BaseCharacterState } from './base-character-state';
@@ -14,10 +14,7 @@ export class IdleState extends BaseCharacterState {
     // this._gameObject.play({ key: PLAYER_ANIMATION_KEYS.IDLE_DOWN, repeat: -1 }, true);
     this._gameObject.animationComponent.playAnimation(`IDLE_${this._gameObject.direction}`);
 
-    if (isArcadePhysicsBody(this._gameObject.body)) {
-      this._gameObject.body.velocity.x = 0;
-      this._gameObject.body.velocity.y = 0;
-    }
+    this._resetObjectVelocity();
   }
   public onUpdate(): void {
     const controls = this._gameObject.controls;

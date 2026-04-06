@@ -21,10 +21,8 @@ export class LiftState extends BaseCharacterState {
     // this._gameObject.play({ key: PLAYER_ANIMATION_KEYS.IDLE_DOWN, repeat: -1 }, true);
     const gameObjectBeingPickedUp = args[0] as GameObject;
 
-    if (isArcadePhysicsBody(this._gameObject.body)) {
-      this._gameObject.body.velocity.x = 0;
-      this._gameObject.body.velocity.y = 0;
-    }
+    // reset object velocity
+    this._resetObjectVelocity();
 
     // get held component to switch state
     const heldComponent = HeldGameObjectComponent.getComponent<HeldGameObjectComponent>(this._gameObject);
